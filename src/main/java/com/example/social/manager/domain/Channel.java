@@ -23,6 +23,8 @@ public class Channel {
 
     private String name;
 
+    private String type;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_license")
     private UserLicense userLicense;

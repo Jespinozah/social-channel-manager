@@ -26,7 +26,7 @@ public class User {
 	private String lastName;
 	private String email;
 	private String password;
-
+	private String role;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<UserLicense> licenses;
 
