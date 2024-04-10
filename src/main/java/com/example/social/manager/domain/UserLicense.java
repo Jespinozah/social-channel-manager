@@ -9,11 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.catalina.User;
 
 import java.util.Set;
 
@@ -21,18 +19,22 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Group {
+public class UserLicense {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "platform_id")
-    private Platform platform;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", cascade = CascadeType.ALL)
-    private Set<UserLicense> userLicenseSet;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userLicense", cascade = CascadeType.ALL)
+    private Set<Channel> channels;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    private Group group;
 }
-
