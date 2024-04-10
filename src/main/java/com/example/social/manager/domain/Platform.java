@@ -1,6 +1,7 @@
 package com.example.social.manager.domain;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ public class Platform {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String name;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "platform", cascade = CascadeType.ALL)
     private Set<Group> groups;
