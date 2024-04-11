@@ -20,7 +20,7 @@ public class UserController {
     }
 
     private record UserCreateRequest(String email, String firstName, String lastName,
-                                     String rol, String username, String password) {
+                                     String role, String username, String password) {
     }
 
     private record UserCreateResponse(Integer id) {
@@ -31,7 +31,8 @@ public class UserController {
 
     @PostMapping(path = "/login")
     public @ResponseBody UserResponseLogin login(@RequestBody UserRequestLogin userRequestLogin) {
-        return new UserResponseLogin(userService.login(userRequestLogin.username, userRequestLogin.password));
+        return new UserResponseLogin(userService.login(userRequestLogin.username,
+                userRequestLogin.password));
     }
 
     @AuthorizedRoles({"SUPER_ADMIN"})
@@ -40,7 +41,7 @@ public class UserController {
         return new UserCreateResponse(userService.create(userCreateRequest.email,
                 userCreateRequest.firstName,
                 userCreateRequest.lastName,
-                userCreateRequest.rol,
+                userCreateRequest.role,
                 userCreateRequest.username,
                 userCreateRequest.password
         ));

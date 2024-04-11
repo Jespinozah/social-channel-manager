@@ -1,13 +1,19 @@
 package com.example.social.manager.controller;
 
 import com.example.social.manager.controller.validation.AuthorizedRoles;
+import com.example.social.manager.domain.Group;
+import com.example.social.manager.domain.Platform;
+import com.example.social.manager.domain.UserLicense;
 import com.example.social.manager.service.PlatformServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/platform")
@@ -25,7 +31,7 @@ public class PlatformController {
     private record GroupCreateResponse(Integer id) {
     }
 
-    private record UserLicenseCreateRequest(String name, Integer userId, Integer groupId) {
+    private record UserLicenseCreateRequest(String name, String role) {
     }
 
     private record UserLicenseCreateResponse(Integer id) {
@@ -41,18 +47,33 @@ public class PlatformController {
     }
 
     @AuthorizedRoles({"SUPER_ADMIN"})
+    @GetMapping(path = "")
+    public @ResponseBody List<Platform> getPlatforms() {
+        return platformService.getPlatforms();
+    }
+
+    @AuthorizedRoles({"SUPER_ADMIN"})
     @PostMapping(path = "/group")
     public @ResponseBody GroupCreateResponse createGroup(@RequestBody GroupCreateRequest groupCreateRequest) {
         return new GroupCreateResponse(platformService.createGroup(groupCreateRequest.name,
                 groupCreateRequest.platformId));
     }
 
+    @AuthorizedRoles({"SUPER_ADMIN", "SIMPLE"})
+    @GetMapping(path = "/group")
+    public @ResponseBody List<Group> getGroups() {
+        return platformService.getGroups();
+    }
+
     @AuthorizedRoles({"SUPER_ADMIN"})
     @PostMapping(path = "/group/user/license")
     public @ResponseBody UserLicenseCreateResponse createUserLicense(@RequestBody UserLicenseCreateRequest userLicenseCreateRequest) {
         return new UserLicenseCreateResponse(platformService.createUserLicense(userLicenseCreateRequest.name,
-                userLicenseCreateRequest.userId,
-                userLicenseCreateRequest.groupId));
+                userLicenseCreateRequest.role));
     }
-
+    @AuthorizedRoles({"SUPER_ADMIN", "SIMPLE"})
+    @GetMapping(path = "/group/user/license")
+    public @ResponseBody List<UserLicense> getUserLicenses() {
+        return platformService.getUserLicenses();
+    }
 }

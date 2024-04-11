@@ -29,6 +29,8 @@ public class UserLicense {
     @Column(unique = true)
     private String name;
 
+    private String role;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;

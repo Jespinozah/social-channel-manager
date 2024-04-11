@@ -19,7 +19,7 @@ public class UserService implements UserServiceInterface{
     public String login(String username, String password) {
 
         Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
+        if (user.isPresent()) {
             var dbUser = user.get();
             if (dbUser.getPassword().equals(password)) {
                 return JwtUtil.generateToken(

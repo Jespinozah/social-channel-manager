@@ -26,7 +26,7 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
                         return false;
                     }
                     Claims claim = JwtUtil.getClaim(jwt);
-                    String userRol = claim.get("rol").toString();
+                    String userRol = claim.get("role").toString();
                     boolean authorized = Arrays.asList(requiredRoles).contains(userRol);
                     if (!authorized) {
                         response.setStatus(HttpServletResponse.SC_FORBIDDEN);

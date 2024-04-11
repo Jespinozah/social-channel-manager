@@ -10,6 +10,8 @@ import com.example.social.manager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlatformServiceService implements PlatformServiceInterface {
 
@@ -32,6 +34,11 @@ public class PlatformServiceService implements PlatformServiceInterface {
     }
 
     @Override
+    public List<Platform> getPlatforms() {
+        return platformRepository.findAll();
+    }
+
+    @Override
     public Integer createGroup(String name, Integer platformId) {
         var group = new Group();
         var platform = platformRepository.findById(platformId).orElseThrow();
@@ -41,13 +48,20 @@ public class PlatformServiceService implements PlatformServiceInterface {
     }
 
     @Override
-    public Integer createUserLicense(String name, Integer userId, Integer groupId) {
+    public List<Group> getGroups() {
+        return groupRepository.findAll();
+    }
+
+    @Override
+    public Integer createUserLicense(String name, String role) {
         var userLicense = new UserLicense();
-        var user = userRepository.findById(userId).orElseThrow();
-        var group = groupRepository.findById(groupId).orElseThrow();
         userLicense.setName(name);
-        userLicense.setUser(user);
-        userLicense.setGroup(group);
+        userLicense.setRole(role);
         return userLicenseRepository.save(userLicense).getId();
+    }
+
+    @Override
+    public List<UserLicense> getUserLicenses() {
+        return userLicenseRepository.findAll();
     }
 }
