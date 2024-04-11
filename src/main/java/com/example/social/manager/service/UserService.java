@@ -2,7 +2,7 @@ package com.example.social.manager.service;
 
 import com.example.social.manager.domain.User;
 import com.example.social.manager.repository.UserRepository;
-import com.example.social.manager.util.JWT;
+import com.example.social.manager.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +22,24 @@ public class UserService implements UserServiceInterface{
         if (user.isPresent() && user.get().getPassword().equals(password)) {
             var dbUser = user.get();
             if (dbUser.getPassword().equals(password)) {
-                return JWT.createJWT(
+                return JwtUtil.generateToken(
                         UUID.randomUUID().toString(),
-                        new JWT.User(dbUser.getUsername(),dbUser.getEmail(), dbUser.getRole()),
-                        1200L );
+                        new JwtUtil.User(dbUser.getUsername(),dbUser.getEmail(), dbUser.getRole()));
             }
 
         }
         return "";
+    }
+
+    @Override
+    public void create(String email, String firstName, String lastName, String rol, String username, String password) {
+       var user = new User();
+       user.setUsername(username);
+       user.setFirstName(firstName);
+       user.setLastName(lastName);
+       user.setEmail(email);
+       user.setRole(rol);
+       user.setPassword(password);
+       userRepository.save(user);
     }
 }
