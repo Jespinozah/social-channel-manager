@@ -7,30 +7,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(path = "/demo")
-public class MainController {
+@RequestMapping(path = "/user")
+public class UserController {
+
+    private record UserRequestLogin(String username, String password) {
+    }
+    private record UserResponseLogin(String token) {
+    }
 
     @Autowired
-    private UserRepository userRepository;
+    private UserServiceInterface userService;
 
-    @PostMapping(path = "/add")
-    public @ResponseBody String addNewUser(@RequestParam String name
-            , @RequestParam String email) {
-        User n = new User();
-        n.setFirstName(name);
-        n.setEmail(email);
-        userRepository.save(n);
-        return "Saved";
+    @PostMapping(path = "/login")
+    public @ResponseBody UserResponseLogin login(@RequestBody UserRequestLogin userRequestLogin) {
+        return new UserResponseLogin(userService.login(userRequestLogin.username, userRequestLogin.password));
     }
-
-    @GetMapping(path = "/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
 }
