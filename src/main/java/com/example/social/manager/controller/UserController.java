@@ -23,6 +23,9 @@ public class UserController {
                                      String rol, String username, String password) {
     }
 
+    private record UserCreateResponse(Integer id) {
+    }
+
     @Autowired
     private UserServiceInterface userService;
 
@@ -33,14 +36,14 @@ public class UserController {
 
     @AuthorizedRoles({"SUPER_ADMIN"})
     @PostMapping(path = "")
-    public @ResponseBody void create(@RequestBody UserCreateRequest userCreateRequest) {
-        userService.create(userCreateRequest.email,
+    public @ResponseBody UserCreateResponse create(@RequestBody UserCreateRequest userCreateRequest) {
+        return new UserCreateResponse(userService.create(userCreateRequest.email,
                 userCreateRequest.firstName,
                 userCreateRequest.lastName,
                 userCreateRequest.rol,
                 userCreateRequest.username,
                 userCreateRequest.password
-        );
+        ));
     }
 
 }

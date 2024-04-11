@@ -32,7 +32,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public void create(String email, String firstName, String lastName, String rol, String username, String password) {
+    public Integer create(String email, String firstName, String lastName, String rol, String username, String password) {
        var user = new User();
        user.setUsername(username);
        user.setFirstName(firstName);
@@ -40,6 +40,6 @@ public class UserService implements UserServiceInterface{
        user.setEmail(email);
        user.setRole(rol);
        user.setPassword(password);
-       userRepository.save(user);
+       return userRepository.save(user).getId();
     }
 }
