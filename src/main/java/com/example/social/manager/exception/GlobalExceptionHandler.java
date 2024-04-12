@@ -8,22 +8,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<Object> ResourceNotFoundException(ResourceNotFoundException exception) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(exception.getMessage());
+    public ResponseEntity<SocialManagerErrorResponse> ResourceNotFoundException(ResourceNotFoundException exception) {
+        return new ResponseEntity<>(new SocialManagerErrorResponse(exception.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({UnauthorizedException.class})
     public ResponseEntity<Object> ResourceNotFoundException(UnauthorizedException exception) {
-        return ResponseEntity
-                .status(401)
-                .body(exception.getMessage());
+        return new ResponseEntity<>(new SocialManagerErrorResponse(exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<Object> handleRuntimeException(RuntimeException exception) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(exception.getMessage());
+        return new ResponseEntity<>(new SocialManagerErrorResponse(exception.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

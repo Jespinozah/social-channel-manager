@@ -4,6 +4,7 @@ import com.example.social.manager.domain.Channel;
 import com.example.social.manager.domain.Group;
 import com.example.social.manager.domain.Platform;
 import com.example.social.manager.domain.UserLicense;
+import com.example.social.manager.exception.ResourceNotFoundException;
 import com.example.social.manager.repository.ChannelRepository;
 import com.example.social.manager.repository.GroupRepository;
 import com.example.social.manager.repository.PlatformRepository;
@@ -47,7 +48,8 @@ public class PlatformServiceService implements PlatformServiceInterface {
     @Override
     public Integer createGroup(String name, Integer platformId) {
         var group = new Group();
-        var platform = platformRepository.findById(platformId).orElseThrow();
+        var platform = platformRepository.findById(platformId).orElseThrow(() -> new RuntimeException(String.format(
+                "Platform was not found for this id %s", platformId)));
         group.setName(name);
         group.setPlatform(platform);
         return groupRepository.save(group).getId();
@@ -74,8 +76,10 @@ public class PlatformServiceService implements PlatformServiceInterface {
     @Override
     public Integer updateUserLicense(Integer userLicenseId, Integer groupId, Integer userId, String role) {
         var userLicense = userLicenseRepository.findById(userLicenseId).orElseThrow();
-        var group = groupRepository.findById(groupId).orElseThrow();
-        var user = userRepository.findById(userId).orElseThrow();
+        var group = groupRepository.findById(groupId).orElseThrow(() -> new ResourceNotFoundException(String.format(
+                "Group not found for this id %s", groupId)));
+        var user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(String.format(
+                "User not found for this id %s", userId)));
         userLicense.setUser(user);
         userLicense.setGroup(group);
         userLicense.setRole(role);
@@ -86,17 +90,19 @@ public class PlatformServiceService implements PlatformServiceInterface {
     @Override
     public Integer createChannel(String name, String type, Integer userLicenseId) {
         var channel = new Channel();
-        var userLicense = userLicenseRepository.findById(userLicenseId).orElseThrow();
+        var userLicense =
+                userLicenseRepository
+                        .findById(userLicenseId)
+                        .orElseThrow(() -> new ResourceNotFoundException(String.format("UserLicense not found for " +
+                                "this %s", userLicenseId)));
         channel.setName(name);
         channel.setType(type);
         channel.setUserLicense(userLicense);
-        return channelRepository.save(channel).getId() ;
-
+        return channelRepository.save(channel).getId();
     }
 
     @Override
     public void deleteChannel(Integer id) {
-
         channelRepository.deleteById(id);
     }
 }
