@@ -1,5 +1,6 @@
 package com.example.social.manager.controller.validation;
 
+import com.example.social.manager.exception.UnauthorizedException;
 import com.example.social.manager.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,19 +23,16 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
                 if (authorizationHeader != null) {
                     var jwt = authorizationHeader.split(" ")[1];
                     if (!JwtUtil.validateToken(jwt)) {
-                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                        return false;
+                        throw new UnauthorizedException("Bad token");
                     }
                     Claims claim = JwtUtil.getClaim(jwt);
                     String userRol = claim.get("role").toString();
                     boolean authorized = Arrays.asList(requiredRoles).contains(userRol);
                     if (!authorized) {
-                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                        return false;
+                        throw new UnauthorizedException("User not authorized");
                     }
                 } else {
-                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    return false;
+                    throw new UnauthorizedException("Authorization token is missing");
                 }
             }
         }
