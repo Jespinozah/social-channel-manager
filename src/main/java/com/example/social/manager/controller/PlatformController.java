@@ -1,8 +1,7 @@
 package com.example.social.manager.controller;
 
+import com.example.social.manager.controller.mapper.RestMapper;
 import com.example.social.manager.controller.validation.AuthorizedRoles;
-import com.example.social.manager.domain.Group;
-import com.example.social.manager.domain.Platform;
 import com.example.social.manager.domain.UserLicense;
 import com.example.social.manager.service.PlatformServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(path = "/platform")
@@ -37,8 +37,17 @@ public class PlatformController {
     private record UserLicenseCreateResponse(Integer id) {
     }
 
+    public record Platform(Integer id, String name, Set<Group> groups) {
+    }
+
+    public record Group(Integer id, String name) {
+    }
+
     @Autowired
     private PlatformServiceInterface platformService;
+
+    @Autowired
+    private RestMapper mapper;
 
     @AuthorizedRoles({"SUPER_ADMIN"})
     @PostMapping(path = "")
@@ -49,7 +58,7 @@ public class PlatformController {
     @AuthorizedRoles({"SUPER_ADMIN"})
     @GetMapping(path = "")
     public @ResponseBody List<Platform> getPlatforms() {
-        return platformService.getPlatforms();
+        return platformService.getPlatforms().stream().map(p -> mapper.toPlatformRest(p)).toList();
     }
 
     @AuthorizedRoles({"SUPER_ADMIN"})
@@ -62,7 +71,7 @@ public class PlatformController {
     @AuthorizedRoles({"SUPER_ADMIN", "SIMPLE"})
     @GetMapping(path = "/group")
     public @ResponseBody List<Group> getGroups() {
-        return platformService.getGroups();
+        return platformService.getGroups().stream().map(p -> mapper.toGroupRest(p)).toList();
     }
 
     @AuthorizedRoles({"SUPER_ADMIN"})
@@ -71,6 +80,7 @@ public class PlatformController {
         return new UserLicenseCreateResponse(platformService.createUserLicense(userLicenseCreateRequest.name,
                 userLicenseCreateRequest.role));
     }
+
     @AuthorizedRoles({"SUPER_ADMIN", "SIMPLE"})
     @GetMapping(path = "/group/user/license")
     public @ResponseBody List<UserLicense> getUserLicenses() {
