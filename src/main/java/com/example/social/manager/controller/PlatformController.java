@@ -7,6 +7,7 @@ import com.example.social.manager.domain.UserLicense;
 import com.example.social.manager.service.PlatformServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -57,6 +58,12 @@ public class PlatformController {
     public record User(Integer id, String email, String firstName, String role, String username) {
     }
 
+    public record ChannelCreateRequest(String name, Integer userLicenseId, String type) {}
+
+    public record ChannelCreateResponse(Integer id){}
+    public record ChannelDeleteResponse(Integer id){}
+    public record ChannelDeleteRequest(Integer id){}
+
     @Autowired
     private PlatformServiceInterface platformService;
 
@@ -106,5 +113,19 @@ public class PlatformController {
     public @ResponseBody UserLicenseUpdateResponse updateUserLicenses(@RequestBody UserLicenseUpdateRequest request) {
         return new UserLicenseUpdateResponse(platformService.updateUserLicense(request.userLicenseId,
                 request.groupId, request.userId(), request.role));
+    }
+
+    @AuthorizedRoles({"SUPER_ADMIN", "SIMPLE"})
+    @PostMapping(path = "/channel")
+    public @ResponseBody ChannelCreateResponse createChannel(@RequestBody ChannelCreateRequest request) {
+        return new ChannelCreateResponse(platformService.createChannel(request.name,
+                request.type, request.userLicenseId));
+    }
+
+
+    @AuthorizedRoles({"SUPER_ADMIN", "SIMPLE"})
+    @DeleteMapping(path = "/channel")
+    public @ResponseBody void deleteChannel(@RequestBody ChannelDeleteRequest request) {
+        platformService.deleteChannel(request.id);
     }
 }

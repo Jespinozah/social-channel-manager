@@ -21,4 +21,8 @@ public interface PlatformServiceInterface {
     List<UserLicense> getUserLicenses();
 
     Integer updateUserLicense(Integer userLicenseId, Integer groupId, Integer userId, String role);
+
+    Integer createChannel(String name, String type, Integer userLicenseId);
+
+    void deleteChannel(Integer id);
 }
