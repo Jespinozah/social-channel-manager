@@ -26,6 +26,7 @@ public class PlatformServiceService implements PlatformServiceInterface {
 
     @Autowired
     private UserLicenseRepository userLicenseRepository;
+
     @Override
     public Integer create(String name) {
         var platform = new Platform();
@@ -63,5 +64,17 @@ public class PlatformServiceService implements PlatformServiceInterface {
     @Override
     public List<UserLicense> getUserLicenses() {
         return userLicenseRepository.findAll();
+    }
+
+    @Override
+    public Integer updateUserLicense(Integer userLicenseId, Integer groupId, Integer userId, String role) {
+        var userLicense = userLicenseRepository.findById(userLicenseId).orElseThrow();
+        var group = groupRepository.findById(groupId).orElseThrow();
+        var user = userRepository.findById(userId).orElseThrow();
+        userLicense.setUser(user);
+        userLicense.setGroup(group);
+        userLicense.setRole(role);
+
+        return userLicenseRepository.save(userLicense).getId();
     }
 }

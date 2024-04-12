@@ -19,9 +19,7 @@ public class MainController {
     private UserRepository userRepository;
 
 
-    @GetMapping(path = "/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+
+
 
 }

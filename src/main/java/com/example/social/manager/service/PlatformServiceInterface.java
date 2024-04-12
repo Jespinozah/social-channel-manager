@@ -19,4 +19,6 @@ public interface PlatformServiceInterface {
     Integer createUserLicense(String name, String role);
 
     List<UserLicense> getUserLicenses();
+
+    Integer updateUserLicense(Integer userLicenseId, Integer groupId, Integer userId, String role);
 }
