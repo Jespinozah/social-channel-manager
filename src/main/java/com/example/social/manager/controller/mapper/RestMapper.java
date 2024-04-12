@@ -17,6 +17,7 @@ public interface RestMapper {
     PlatformController.UserLicense toUserLicenseRest(UserLicense userLicense);
 
     PlatformController.User toUserRest(User user);
+
     UserController.User toUserControllerRest(User user);
 
 }

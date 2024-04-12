@@ -2,7 +2,6 @@ package com.example.social.manager.controller;
 
 import com.example.social.manager.controller.mapper.RestMapper;
 import com.example.social.manager.controller.validation.AuthorizedRoles;
-import com.example.social.manager.domain.User;
 import com.example.social.manager.service.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,8 @@ public class UserController {
     private record UserCreateResponse(Integer id) {
     }
 
-    public record User(Integer id, String email, String firstName, String role, String username) {}
+    public record User(Integer id, String email, String firstName, String role, String username) {
+    }
 
     @Autowired
     private UserServiceInterface userService;
@@ -59,7 +59,7 @@ public class UserController {
 
     @GetMapping(path = "")
     public @ResponseBody List<User> getAllUsers() {
-        return userService.getAll().stream().map(p->mapper.toUserControllerRest(p)).toList();
+        return userService.getAll().stream().map(p -> mapper.toUserControllerRest(p)).toList();
     }
 
 }

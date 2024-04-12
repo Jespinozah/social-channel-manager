@@ -2,8 +2,6 @@ package com.example.social.manager.controller;
 
 import com.example.social.manager.controller.mapper.RestMapper;
 import com.example.social.manager.controller.validation.AuthorizedRoles;
-import com.example.social.manager.domain.Group;
-import com.example.social.manager.domain.UserLicense;
 import com.example.social.manager.service.PlatformServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,11 +56,17 @@ public class PlatformController {
     public record User(Integer id, String email, String firstName, String role, String username) {
     }
 
-    public record ChannelCreateRequest(String name, Integer userLicenseId, String type) {}
+    public record ChannelCreateRequest(String name, Integer userLicenseId, String type) {
+    }
 
-    public record ChannelCreateResponse(Integer id){}
-    public record ChannelDeleteResponse(Integer id){}
-    public record ChannelDeleteRequest(Integer id){}
+    public record ChannelCreateResponse(Integer id) {
+    }
+
+    public record ChannelDeleteResponse(Integer id) {
+    }
+
+    public record ChannelDeleteRequest(Integer id) {
+    }
 
     @Autowired
     private PlatformServiceInterface platformService;

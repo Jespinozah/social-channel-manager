@@ -10,7 +10,9 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    public record User(String username, String email, String role) {}
+    public record User(String username, String email, String role) {
+    }
+
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     // Estableceremos la validez de nuestro token por un lapso de 6 horas (milisegundos)
     private static final long expirationTime = 21600000;
